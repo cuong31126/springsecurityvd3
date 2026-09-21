@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/layout :: head('Quản lý User')}"></head>
+<body>
+<div th:replace="~{layouts/layout :: page(~{::main})}">
+<main>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h1 style="font-size: 1.6rem; font-weight: 700;">Danh sách Người dùng</h1>
+        <a th:href="@{/users/create}" class="button">+ Thêm User</a>
+    </div>
+
+    <div th:if="${success}" class="alert success" th:text="${success}"></div>
+
+    <form method="get" th:action="@{/users}" class="search-bar">
+        <input type="text" name="keyword" th:value="${keyword}" placeholder="Tìm theo username, email, họ tên...">
+        <button class="button" type="submit">Tìm kiếm</button>
+    </form>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Họ và tên</th>
+            <th>Email</th>
+            <th>Vai trò</th>
+            <th>Trạng thái</th>
+            <th>Số SP</th>
+            <th>Thao tác</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="u : ${users.content}">
+            <td th:text="${u.id}"></td>
+            <td th:text="${u.username}"></td>
+            <td th:text="${u.fullName}"></td>
+            <td th:text="${u.email}"></td>
+            <td><span class="badge" th:text="${u.roleName}"></span></td>
+            <td>
+                <span th:if="${u.enabled}" style="color: #16a34a; font-weight: 600;">ACTIVE</span>
+                <span th:unless="${u.enabled}" style="color: #94a3b8; font-weight: 600;">INACTIVE</span>
+            </td>
+            <td th:text="${u.productCount}">0</td>
+            <td class="actions">
+                <a th:href="@{/users/edit/{id}(id=${u.id})}">Sửa</a>
+                <form th:action="@{/users/delete/{id}(id=${u.id})}" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa user này?')">
+                    <button type="submit" class="danger-link">Xóa</button>
+                </form>
+            </td>
+        </tr>
+        <tr th:if="${users.empty}">
+            <td colspan="8" style="text-align: center; color: #94a3b8; padding: 30px;">Không có người dùng nào.</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="pagination" th:if="${users.totalPages > 1}">
+        <a th:if="${users.hasPrevious()}" th:href="@{/users(page=${users.number - 1}, size=${size}, keyword=${keyword})}">&laquo;</a>
+        <span th:each="i : ${#numbers.sequence(0, users.totalPages - 1)}">
+            <a th:if="${i != users.number}" th:href="@{/users(page=${i}, size=${size}, keyword=${keyword})}" th:text="${i + 1}"></a>
+            <span th:if="${i == users.number}" class="active" th:text="${i + 1}"></span>
+        </span>
+        <a th:if="${users.hasNext()}" th:href="@{/users(page=${users.number + 1}, size=${size}, keyword=${keyword})}">&raquo;</a>
+    </div>
+</main>
+</div>
+</body>
+</html>

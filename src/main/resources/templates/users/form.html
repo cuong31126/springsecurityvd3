@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/layout :: head(${mode == 'create' ? 'Thêm User' : 'Sửa User'})}"></head>
+<body>
+<div th:replace="~{layouts/layout :: page(~{::main})}">
+<main>
+    <div style="max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; border: 1px solid #e2e8f0;">
+        <h1 style="font-size: 1.5rem; margin-bottom: 20px;" th:text="${mode == 'create' ? 'Thêm Người dùng mới' : 'Cập nhật Người dùng'}"></h1>
+
+        <div th:if="${#fields.hasGlobalErrors()}" class="alert error">
+            <p th:each="e : ${#fields.globalErrors()}" th:text="${e}"></p>
+        </div>
+
+        <form th:object="${userDTO}" method="post"
+              th:action="${mode == 'create'} ? @{/users/create} : @{/users/edit/{id}(id=${userDTO.id})}">
+
+            <div>
+                <label>Username</label>
+                <input type="text" th:field="*{username}">
+                <small class="error-text" th:errors="*{username}"></small>
+            </div>
+
+            <div>
+                <label>Email</label>
+                <input type="email" th:field="*{email}">
+                <small class="error-text" th:errors="*{email}"></small>
+            </div>
+
+            <div>
+                <label>Họ và tên</label>
+                <input type="text" th:field="*{fullName}">
+                <small class="error-text" th:errors="*{fullName}"></small>
+            </div>
+
+            <div>
+                <label>Vai trò (Role)</label>
+                <select th:field="*{roleName}">
+                    <option value="ROLE_USER">ROLE_USER</option>
+                    <option value="ROLE_ADMIN">ROLE_ADMIN</option>
+                </select>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 10px; margin: 15px 0;">
+                <input type="checkbox" id="enabled" th:field="*{enabled}" style="width: auto; margin: 0;">
+                <label for="enabled" style="margin: 0; cursor: pointer;">Kích hoạt tài khoản (Active)</label>
+            </div>
+
+            <div style="display: flex; gap: 15px; margin-top: 25px;">
+                <button type="submit" class="button">Lưu thông tin</button>
+                <a th:href="@{/users}" class="button secondary">Hủy</a>
+            </div>
+        </form>
+    </div>
+</main>
+</div>
+</body>
+</html>
