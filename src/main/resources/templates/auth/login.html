@@ -7,7 +7,7 @@
         <h1>Đăng nhập</h1>
 
         <div th:if="${param.error}" class="alert error">
-            Sai tên đăng nhập/email hoặc mật khẩu!
+            Sai tên đăng nhập/email hoặc mật khẩu (hoặc tài khoản chưa được xác thực mã OTP)!
         </div>
         <div th:if="${param.logout}" class="alert success">
             Bạn đã đăng xuất thành công.

@@ -1,44 +1,46 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{layouts/layout :: head(${mode == 'create' ? 'Thêm Sản phẩm' : 'Sửa Sản phẩm'})}"></head>
+<head th:replace="~{layouts/layout :: head(${mode == 'create' ? 'Thêm Product' : 'Sửa Product'})}"></head>
 <body>
 <div th:replace="~{layouts/layout :: page(~{::main})}">
 <main>
-    <div style="max-width: 650px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; border: 1px solid #e2e8f0;">
+    <div style="max-width: 650px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
         <h1 style="font-size: 1.5rem; margin-bottom: 20px;" th:text="${mode == 'create' ? 'Thêm Sản phẩm mới' : 'Cập nhật Sản phẩm'}"></h1>
 
-        <div th:if="${#fields.hasGlobalErrors()}" class="alert error">
-            <p th:each="e : ${#fields.globalErrors()}" th:text="${e}"></p>
-        </div>
+        <form th:object="${productDTO}" method="post" enctype="multipart/form-data" accept-charset="UTF-8"
+              th:action="${mode == 'create'} ? @{/products/create} : @{'/products/edit/' + *{id}}">
 
-        <form th:object="${productDTO}" method="post" enctype="multipart/form-data"
-              th:action="${mode == 'create'} ? @{/products/create} : @{/products/edit/{id}(id=${productDTO.id})}">
+            <div th:if="${#fields.hasGlobalErrors()}" class="alert error">
+                <p th:each="e : ${#fields.globalErrors()}" th:text="${e}"></p>
+            </div>
+
+            <input type="hidden" th:field="*{id}">
 
             <div>
-                <label>Tên sản phẩm</label>
-                <input type="text" th:field="*{name}" placeholder="Nhập tên sản phẩm">
+                <label for="name">Tên sản phẩm</label>
+                <input id="name" type="text" th:field="*{name}" placeholder="Nhập tên sản phẩm">
                 <small class="error-text" th:errors="*{name}"></small>
             </div>
 
             <div>
-                <label>Mô tả sản phẩm</label>
-                <textarea th:field="*{description}" rows="4" placeholder="Nhập mô tả sản phẩm..."></textarea>
+                <label for="description">Mô tả sản phẩm</label>
+                <textarea id="description" th:field="*{description}" rows="4" placeholder="Nhập mô tả sản phẩm..."></textarea>
                 <small class="error-text" th:errors="*{description}"></small>
             </div>
 
             <div>
-                <label>Giá bán (VNĐ)</label>
-                <input type="number" step="0.01" th:field="*{price}" placeholder="0.00">
+                <label for="price">Giá bán (VNĐ)</label>
+                <input id="price" type="number" step="0.01" th:field="*{price}" placeholder="0.00">
                 <small class="error-text" th:errors="*{price}"></small>
             </div>
 
             <div>
-                <label>Hình ảnh sản phẩm (Upload Cloudinary)</label>
-                <input type="file" name="image" accept="image/*">
-                <div th:if="${productDTO.imageUrl != null and !productDTO.imageUrl.isBlank()}" style="margin-top: 10px;">
+                <label for="image">Hình ảnh sản phẩm (Upload Cloudinary)</label>
+                <input id="image" type="file" name="image" accept="image/*">
+                <div th:if="${productDTO.imageUrl != null and !#strings.isEmpty(productDTO.imageUrl)}" style="margin-top: 10px;">
                     <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 5px;">Ảnh hiện tại:</p>
                     <img th:src="${#strings.contains(productDTO.imageUrl, '|') ? #strings.substringBefore(productDTO.imageUrl, '|') : productDTO.imageUrl}"
-                         class="thumb" style="width: 80px; height: 80px;" alt="Current image">
+                         class="thumb" style="width: 80px; height: 80px; object-fit: cover; border-radius: 6px; border: 1px solid #e2e8f0;" alt="Current image">
                 </div>
             </div>
 
