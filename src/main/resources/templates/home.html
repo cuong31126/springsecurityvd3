@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/layout :: head('Dashboard')}"></head>
+<body>
+<div th:replace="~{layouts/layout :: page(~{::main})}">
+<main>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+        <h1 style="font-size: 1.8rem; font-weight: 700;">Hệ Thống Quản Lý Bán Hàng</h1>
+    </div>
+
+    <div th:if="${success}" class="alert success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert error" th:text="${error}"></div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>Tổng số Người dùng</h3>
+            <div class="number" th:text="${totalUsers}">0</div>
+        </div>
+        <div class="stat-card">
+            <h3>Tổng số Sản phẩm</h3>
+            <div class="number" th:text="${totalProducts}">0</div>
+        </div>
+    </div>
+
+    <div style="background: white; padding: 24px; border-radius: 12px; border: 1px solid #e2e8f0; margin-top: 20px;">
+        <h2 style="font-size: 1.3rem; margin-bottom: 12px; color: #0f172a;">Tính năng chính hệ thống</h2>
+        <ul style="padding-left: 20px; line-height: 1.8; color: #475569;">
+            <li>Đăng ký tài khoản với xác thực mã OTP qua Email</li>
+            <li>Đăng nhập lưu Session & phân quyền ROLE_USER / ROLE_ADMIN</li>
+            <li>Quên mật khẩu và Đặt lại mật khẩu với xác thực OTP</li>
+            <li>Quản lý danh sách Sản phẩm, tìm kiếm, phân trang và upload ảnh Cloudinary</li>
+            <li>Quản lý Users (phân quyền ADMIN): tìm kiếm, phân trang, đếm số lượng sản phẩm của từng User</li>
+        </ul>
+    </div>
+</main>
+</div>
+</body>
+</html>

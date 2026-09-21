@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<header th:fragment="header" class="header">
+    <a th:href="@{/}" class="brand">IOTSTAR SHOP</a>
+    <nav>
+        <a th:href="@{/}">Dashboard</a>
+        <a th:href="@{/products}" sec:authorize="isAuthenticated()">Sản phẩm</a>
+        <a th:href="@{/users}" sec:authorize="hasRole('ADMIN')">Quản lý User</a>
+    </nav>
+    <div class="user-info">
+        <th:block sec:authorize="isAuthenticated()">
+            <span style="font-size: 0.9rem;">
+                Xin chào, <strong sec:authentication="name">User</strong>
+                <span class="badge" sec:authorize="hasRole('ADMIN')">ADMIN</span>
+                <span class="badge" sec:authorize="!hasRole('ADMIN')">USER</span>
+            </span>
+            <form th:action="@{/logout}" method="post" style="display:inline;">
+                <button type="submit" class="link-button">Đăng xuất</button>
+            </form>
+        </th:block>
+        <th:block sec:authorize="isAnonymous()">
+            <a th:href="@{/login}" class="button" style="padding: 6px 14px; font-size: 0.85rem;">Đăng nhập</a>
+            <a th:href="@{/register}" class="button secondary" style="padding: 6px 14px; font-size: 0.85rem;">Đăng ký</a>
+        </th:block>
+    </div>
+</header>
+</body>
+</html>

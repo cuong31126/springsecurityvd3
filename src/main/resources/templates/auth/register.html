@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/layout :: head('Đăng ký')}"></head>
+<body>
+<div class="auth-page">
+    <div class="auth-card">
+        <h1>Đăng ký tài khoản</h1>
+
+        <div th:if="${#fields.hasGlobalErrors()}" class="alert error">
+            <p th:each="e : ${#fields.globalErrors()}" th:text="${e}"></p>
+        </div>
+
+        <form th:action="@{/register}" th:object="${registerDTO}" method="post">
+            <div>
+                <label>Username</label>
+                <input type="text" th:field="*{username}" placeholder="Tên đăng nhập">
+                <small class="error-text" th:errors="*{username}"></small>
+            </div>
+            <div>
+                <label>Họ và tên</label>
+                <input type="text" th:field="*{fullName}" placeholder="Nguyễn Văn A">
+                <small class="error-text" th:errors="*{fullName}"></small>
+            </div>
+            <div>
+                <label>Email</label>
+                <input type="email" th:field="*{email}" placeholder="example@gmail.com">
+                <small class="error-text" th:errors="*{email}"></small>
+            </div>
+            <div>
+                <label>Mật khẩu</label>
+                <input type="password" th:field="*{password}" placeholder="Tối thiểu 6 ký tự">
+                <small class="error-text" th:errors="*{password}"></small>
+            </div>
+            <div>
+                <label>Xác nhận mật khẩu</label>
+                <input type="password" th:field="*{confirmPassword}" placeholder="Nhập lại mật khẩu">
+                <small class="error-text" th:errors="*{confirmPassword}"></small>
+            </div>
+
+            <button class="button full" type="submit">Đăng ký & Nhận OTP</button>
+        </form>
+
+        <p>Đã có tài khoản? <a th:href="@{/login}">Đăng nhập</a></p>
+    </div>
+</div>
+</body>
+</html>

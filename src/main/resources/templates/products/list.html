@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/layout :: head('Danh sách Sản phẩm')}"></head>
+<body>
+<div th:replace="~{layouts/layout :: page(~{::main})}">
+<main>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h1 style="font-size: 1.6rem; font-weight: 700;">Danh sách Sản phẩm</h1>
+        <a th:href="@{/products/create}" class="button">+ Thêm Sản phẩm</a>
+    </div>
+
+    <div th:if="${success}" class="alert success" th:text="${success}"></div>
+
+    <form method="get" th:action="@{/products}" class="search-bar">
+        <input type="text" name="keyword" th:value="${keyword}" placeholder="Tìm kiếm theo tên sản phẩm, mô tả...">
+        <button class="button" type="submit">Tìm kiếm</button>
+    </form>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Hình ảnh</th>
+            <th>Tên sản phẩm</th>
+            <th>Giá</th>
+            <th>Người tạo</th>
+            <th>Thao tác</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="p : ${products.content}">
+            <td th:text="${p.id}"></td>
+            <td>
+                <img th:if="${p.imageUrl != null and !p.imageUrl.isBlank()}"
+                     th:src="${#strings.contains(p.imageUrl, '|') ? #strings.substringBefore(p.imageUrl, '|') : p.imageUrl}"
+                     class="thumb" alt="Product image">
+                <span th:unless="${p.imageUrl != null and !p.imageUrl.isBlank()}" style="color: #94a3b8; font-size: 0.85rem;">Không có ảnh</span>
+            </td>
+            <td>
+                <strong th:text="${p.name}"></strong>
+                <p th:if="${p.description != null}" th:text="${p.description}" style="font-size: 0.85rem; color: #64748b; margin-top: 4px;"></p>
+            </td>
+            <td style="font-weight: 600; color: #0284c7;" th:text="${#numbers.formatDecimal(p.price, 0, 'COMMA', 2, 'POINT')} + ' đ'"></td>
+            <td th:text="${p.username}"></td>
+            <td class="actions">
+                <a th:href="@{/products/edit/{id}(id=${p.id})}">Sửa</a>
+                <form th:action="@{/products/delete/{id}(id=${p.id})}" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">
+                    <button type="submit" class="danger-link">Xóa</button>
+                </form>
+            </td>
+        </tr>
+        <tr th:if="${products.empty}">
+            <td colspan="6" style="text-align: center; color: #94a3b8; padding: 30px;">Không có sản phẩm nào.</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="pagination" th:if="${products.totalPages > 1}">
+        <a th:if="${products.hasPrevious()}" th:href="@{/products(page=${products.number - 1}, size=${size}, keyword=${keyword})}">&laquo;</a>
+        <span th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}">
+            <a th:if="${i != products.number}" th:href="@{/products(page=${i}, size=${size}, keyword=${keyword})}" th:text="${i + 1}"></a>
+            <span th:if="${i == products.number}" class="active" th:text="${i + 1}"></span>
+        </span>
+        <a th:if="${products.hasNext()}" th:href="@{/products(page=${products.number + 1}, size=${size}, keyword=${keyword})}">&raquo;</a>
+    </div>
+</main>
+</div>
+</body>
+</html>

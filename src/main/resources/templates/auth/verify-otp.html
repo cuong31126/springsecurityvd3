@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/layout :: head('Xác thực OTP')}"></head>
+<body>
+<div class="auth-page">
+    <div class="auth-card">
+        <h1>Xác thực mã OTP</h1>
+
+        <div th:if="${success}" class="alert success" th:text="${success}"></div>
+        <div th:if="${#fields.hasGlobalErrors()}" class="alert error">
+            <p th:each="e : ${#fields.globalErrors()}" th:text="${e}"></p>
+        </div>
+
+        <form th:action="@{/verify-otp}" th:object="${verifyOtpDTO}" method="post">
+            <div>
+                <label>Email</label>
+                <input type="email" th:field="*{email}" readonly style="background: #f1f5f9;">
+                <small class="error-text" th:errors="*{email}"></small>
+            </div>
+            <div>
+                <label>Mã OTP (6 chữ số)</label>
+                <input type="text" th:field="*{otp}" maxlength="6" autofocus placeholder="123456" style="letter-spacing: 4px; font-size: 1.2rem; text-align: center;">
+                <small class="error-text" th:errors="*{otp}"></small>
+            </div>
+
+            <button class="button full" type="submit">Kích hoạt tài khoản</button>
+        </form>
+
+        <form th:action="@{/resend-register-otp}" method="post" style="margin-top: 15px;">
+            <input type="hidden" name="email" th:value="${verifyOtpDTO.email}">
+            <button class="button secondary full" type="submit">Gửi lại mã OTP</button>
+        </form>
+
+        <p><a th:href="@{/login}">Quay lại Đăng nhập</a></p>
+    </div>
+</div>
+</body>
+</html>
