@@ -7,11 +7,10 @@
         <h1>Xác thực mã OTP</h1>
 
         <div th:if="${success}" class="alert success" th:text="${success}"></div>
-        <div th:if="${#fields.hasGlobalErrors()}" class="alert error">
-            <p th:each="e : ${#fields.globalErrors()}" th:text="${e}"></p>
-        </div>
-
         <form th:action="@{/verify-otp}" th:object="${verifyOtpDTO}" method="post">
+            <div th:if="${#fields.hasGlobalErrors()}" class="alert error">
+                <p th:each="e : ${#fields.globalErrors()}" th:text="${e}"></p>
+            </div>
             <div>
                 <label>Email</label>
                 <input type="email" th:field="*{email}" readonly style="background: #f1f5f9;">

@@ -37,7 +37,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/", "/login", "/register", "/verify-otp",
                                 "/forgot-password", "/reset-password",
-                                "/resend-register-otp", "/css/**", "/js/**", "/images/**"
+                                "/resend-register-otp", "/error", "/css/**", "/js/**", "/images/**"
                         ).permitAll()
                         .requestMatchers("/users/**").hasRole("ADMIN")
                         .requestMatchers("/products/**").authenticated()
